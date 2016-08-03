@@ -1,0 +1,127 @@
+.TH EMP 1 "Julio 5 2016" "Lucas Di Cunzolo"
+.SH NAME
+EMP \- A file packager
+.SH SYNOPSIS
+.B emp
+.BR [-]
+.BR <option>
+.BR <ARCHIVE_NAME>
+.BR <i/o>
+.BR <ARCHIVE_NAME/DIR>
+.PP
+.SH DESCRIPTION
+Emp stores and extracts files from a tape or disk archive in EMP format.
+.PP
+.SH OPTION LETTERS
+.TP
+.B -p / --pack
+Pack
+.TP
+.B -r / --repack
+Repack
+.TP
+.B -u / --unpack
+Unpack
+.TP
+.B -a / --unpack-all
+Unpack all
+.TP
+.B -d / --detail
+Detail
+.TP
+.B -l / --list
+List
+.PP
+.SH I/O
+.TP
+.B -i / --input
+Input archives
+.TP
+.B -o / --output
+Output archives
+.TP
+.B --outputdir
+Output dirección
+.PP
+.SH DIAGNOSTICS
+EMP returns the following exit codes:
+.RS
+.IP 0
+Normal (no errors or warnings detected).
+.IP 1
+Some files cannot be open during the execution.
+.IP 2
+Some files cannot be read during the process.
+.IP 3
+Some files cannot be write during the process.
+.IP 4
+Some files cannot be create.
+.IP 5
+The cursor in the file cannot be set.
+.IP 6
+An error with the quantity of files ingresed.
+.IP 7
+Can't find the file/s searched.
+.IP 8
+An error with the input.
+.IP 9
+An error with the output.
+.IP 10
+An error with the quantity of options ingresed.
+.IP 11
+An error during the unpack of files.
+.IP 12
+A wrong option.
+.IP 13
+An error opening a directory.
+.IP 14
+An error with the format of the file of input.
+.IP 15
+An error with the name of the file of output.
+.SH LIMITATIONS
+The version 0 cannot pack directories.
+.TP
+The version 1 include the packing of directories.
+.TP
+Only can be selected 9 times the option of no-change the name to a file aready exist. After that, the program ends.
+.SH EXAMPLE WITH SHORT OPTIONS
+.TP
+.B emp -p file1 file2 -o package.emp
+adds file1 and file2 from current directory to archive package.emp
+.TP
+.B emp -u file1 -i package.emp [--outputdir /dir]
+unpack file1 from package.emp to the directory dir, if outputdir was not specified, the default directory is the current directory 
+.TP
+.B emp -r file3 -o package.emp
+add file3 to package.emp
+.TP
+.B emp -a -i package.emp [--outputdir /dir]
+unpack all the files from package.emp to directory dir, if outputdir was not specified, the default directory is the current directory
+.TP
+.B emp -d file1 -i package.emp
+show the details of file1 belonging to package.emp
+.TP
+.B emp -l [name|date|size] -i package.emp
+list the files belonging to package.emp by name, date or size
+.SH EXAMPLE WITH LONG OPTIONS
+.TP
+.B emp --package file1 file2 --output package.emp
+adds file1 and file2 from current directory to archive package.emp
+.TP
+.B emp --unpack file1 --input package.emp [--outputdir /dir]
+unpack file1 from package.emp to the directory dir, if outputdir was not specified, the default directory is the current directory 
+.TP
+.B emp --repack file3 --output package.emp
+repack file3 to package.emp
+.TP
+.B emp --unpack-all --input package.emp [--outputdir /dir]
+unpack all the files from package.emp to directory dir, if outputdir was not specified, the default directory is the current directory
+.TP
+.B emp --detail file1 --input package.emp
+show the details of file1 belonging to package.emp
+.TP
+.B emp --list [name|date|size] --input package.emp
+list the files belonging to package.emp by name, date or size
+.SH AUTHOR
+.TP
+Written for Lenguaje Seminary C by Lucas Di Cunzolo

@@ -1,0 +1,127 @@
+.TH EMP 1 "Julio 5 2016" "Lucas Di Cunzolo"
+.SH NOMBRE
+EMP \- Empaquetador
+.SH SINOPSIS
+.B emp
+.BR [-]
+.BR <opcion>
+.BR <ARCHIVO>
+.BR <i/o>
+.BR <ARCHIVO/DIR>
+.PP
+.SH DESCRIPCION
+Emp almacena y extrae archivos de un archivo almacenado en disco con formato EMP.
+.PP
+.SH OPCIONES
+.TP
+.B -p / --pack
+Empaqueta
+.TP
+.B -r / --repack
+Rempaqueta
+.TP
+.B -u / --unpack
+Desempaqueta
+.TP
+.B -a / --unpack-all
+Desempaqueta todo
+.TP
+.B -d / --detail
+Detalles
+.TP
+.B -l / --list
+Listar
+.PP
+.SH I/O
+.TP
+.B -i / --input
+Archivos de entrada
+.TP
+.B -o / --output
+Archivos de salida
+.TP
+.B --outputdir
+Dirección de salida
+.PP
+.SH DIAGNOSTICOS
+EMP retorna los siguientes codigos de salida:
+.RS
+.IP 0
+Normal (sin errores ni warnings detectados).
+.IP 1
+Algun archivo no pudo ser abierto durante la ejecución.
+.IP 2
+No se pudo leer algun archivo durante el proceso.
+.IP 3
+No se pudo escribir algun archivo durante el proceso.
+.IP 4
+No se pudo crear algun archivo.
+.IP 5
+No se pudo setear el cursor en el archivo.
+.IP 6
+Error con la cantidad de archivos ingresados.
+.IP 7
+No se pudo encontrar el/los archivo/s buscado/s.
+.IP 8
+Error con la entrada.
+.IP 9
+Error con la salida.
+.IP 10
+Error con la cantidad de opciones ingresada.
+.IP 11
+Error durante el proceso de desempaquetamiento de archivos.
+.IP 12
+Opción incorrecta.
+.IP 13
+Error al arbir un directorio.
+.IP 14
+Error con el formato del archivo de entrada.
+.IP 15
+Error con el nombre del archivo de salida.
+.SH LIMITACIONES
+La versión 0 no puede empaquetar directorios.
+.TP 
+La versión 1 incluye el empaquetador de directorios.
+.TP 
+Solo puede seleccionarse 9 veces el no cambiar el nombre a un archivo que ya existe, pasado ese numero tira error.
+.SH EJEMPLOS CON OPCIONES CORTAS
+.TP
+.B emp -p file1 file2 -o package.emp
+empaqueta file1 t file2 desde el directorio actual al archivo package.emp
+.TP
+.B emp -u file1 -i package.emp [--outputdir /dir]
+desempaqueta file1 desde package.emp al directorio dir, si no se especifico un directorio, el directorio predeterminado es el actual.
+.TP
+.B emp -r file3 -o package.emp
+agrega file3 a package.emp (emp ya contiene archivos) 
+.TP
+.B emp -a -i package.emp [--outputdir /dir]
+desempaqueta todos los archivos desde package.emp al directorio dir, si no se especifico un directorio, el directorio predeterminado es el actual.
+.TP
+.B emp -d file1 -i package.emp
+muestra los detalles de file1 proveniente de package.emp
+.TP
+.B emp -l [name|date|size] -i package.emp
+lista los archivos provenientes de package.emp por nombre, fecha de ultima modificacion o tamaño (se debe especificar una sola)
+.SH EJEMPLOS CON OPCIONES LARGAS
+.TP
+.B emp --package file1 file2 --output package.emp
+empaqueta file1 t file2 desde el directorio actual al archivo package.emp
+.TP
+.B emp --unpack file1 --input package.emp [--outputdir /dir]
+desempaqueta file1 desde package.emp al directorio dir, si no se especifico un directorio, el directorio predeterminado es el actual.
+.TP
+.B emp --repack file3 --output package.emp
+agrega file3 a package.emp (package.emp ya contiene archivos) 
+.TP
+.B emp --unpack-all --input package.emp [--outputdir /dir]
+desempaqueta todos los archivos desde package.emp al directorio dir, si no se especifico un directorio, el directorio predeterminado es el actual.
+.TP
+.B emp --detail file1 --input package.emp
+muestra los detalles de file1 proveniente de package.emp
+.TP
+.B emp --list [name|date|size] --input package.emp
+lista los archivos provenientes de package.emp por nombre, fecha de ultima modificacion o tamaño (se debe especificar una sola)
+.SH AUTOR
+.TP
+Escrito para Seminario de Lenguajes C por Lucas Di Cunzolo
