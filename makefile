@@ -1,6 +1,6 @@
 #Carpetas del proyecto
 
-SOURCE_FOLDER=source
+SOURCE_FOLDER=src
 BUILD_FOLDER=build
 TEMPORAL_FOLDER=tmp
 INSTALL_FOLDER=/usr/bin
