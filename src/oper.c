@@ -543,3 +543,8 @@ void file_exist(const char* dir, char* path, size_t io){
 	}
 	closedir(directory);
 }
+
+void print_time(clock_t start, size_t flag){
+	if(flag)
+		printf("Took: %f sec\n", ((double)clock() - start) / CLOCKS_PER_SEC);
+}

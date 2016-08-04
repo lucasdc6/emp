@@ -5,6 +5,7 @@
 #include <time.h>
 #include "args.h"
 #include "empTypes.h"
+#include "oper.h"
 
 extern clock_t start;
 
@@ -15,7 +16,7 @@ void errors_2p(FILE* file, option_args *args, const char* msg, const char* path,
 		free(args);
 	}
 	if(!ok_file) fclose(file);
-	printf("Took: %f sec\n", ((double)clock() - start) / CLOCKS_PER_SEC);
+	print_time(start, 1);
 	exit(num_err);
 }
 
@@ -24,7 +25,7 @@ void errors_1p(FILE* file, option_args *args, const char* msg, const int num_err
 	free_files_array(&args->operands);
 	free(args);
 	fclose(file);
-	printf("Took: %f sec\n", ((double)clock() - start) / CLOCKS_PER_SEC);
+	print_time(start, 1);
 	exit(num_err);
 }
 
@@ -35,6 +36,6 @@ void errors_msg(FILE* file, option_args *args, const char* msg, const int num_er
 		free(args);
 	}
 	if(!ok_file) fclose(file);
-	printf("Took: %f sec\n", ((double)clock() - start) / CLOCKS_PER_SEC);
+	print_time(start, 1);
 	exit(num_err);
 }

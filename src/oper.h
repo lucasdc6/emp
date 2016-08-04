@@ -73,4 +73,9 @@ El tercer parametro indica si es un paquete o un archivo, de ser un paquete
 comprueba si existe y luego el nombre con la funcion ok_output, de ser de archivos
 desempaquetados solo comprueba si existe*/
 void file_exist(const char*, char*, size_t);
+
+/*Muestra el tiempo que tardo el programa en ejecutarse. El segundo parametro es utilizado
+para no mostrar el tiempo transcurrido si el programa se ejecuta en un modo especifico
+(todavia no implementado)*/
+void print_time(clock_t, size_t);
 #endif

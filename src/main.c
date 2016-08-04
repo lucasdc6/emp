@@ -151,6 +151,6 @@ int main(int argc, char *argv[]){
 	}
 	free_files_array(&args->operands);
 	free(args);
-	printf("Took: %f sec\n", ((double)clock() - start) / CLOCKS_PER_SEC);
+	print_time(start, 1);
 	return 0;
 }
