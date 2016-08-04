@@ -11,15 +11,15 @@ I look in the future to add functionality to compress (in .gz format).
 
 ### Steaps:
 ```
-1- $ git clone 
-2- $ make
-3- $ make install
+  $ git clone https://github.com/lucasdc6/emp.git
+  $ make
+  $ make install
 ```
 You may need to give sudo permissions.
 ## Uninstalling
 
 ### Steaps
 ```
-1- $ make uninstall
+  $ make uninstall
 ```
 You may need to give sudo permissions.
