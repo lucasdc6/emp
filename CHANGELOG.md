@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - The program create the file "ERRORS[yyyy-mm-dd-H:M:S]" with the last error
 ### Changed
 - The error messages printed in the stderr
+
 ### Fixed
 - Errors in the packed and unpacked function
 
