@@ -14,8 +14,11 @@ MAN_PAGES_ES=/usr/share/man/es/man1
 #################################
 #Optimizacion: -O0 baja, -O1 normal, -O2 optimizado, -O3 alta
 #Muestra todos los Warnings
-#Compila en el Standard C99
-CFLAGS=-O3 -Wall -std=c99
+#Compila en el Standard C11
+CFLAGS=-O3 -Wall -std=c11
+
+#LINK
+LINK= -lz
 
 #Descomentar para debug
 #DEBUG=-g
@@ -23,16 +26,16 @@ CFLAGS=-O3 -Wall -std=c99
 ##################################
 #Reglas
 
-.PHONY:	all clean folders install uninstall reinstall
+.PHONY:	all c.o clean folders install uninstall reinstall
 all: folders c.o $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
-	gcc $(TEMPORAL_FOLDER)/** -o $(BUILD_FOLDER)/emp $(CFLAGS) $(DEBUG)
+	gcc $(TEMPORAL_FOLDER)/** -o $(BUILD_FOLDER)/emp $(CFLAGS) $(DEBUG) $(LINK)
 
 c.o:
-	gcc -c $(SOURCE_FOLDER)/main.c -o $(TEMPORAL_FOLDER)/main.o $(CFLAGS) $(DEBUG)
-	gcc -c $(SOURCE_FOLDER)/headers.c -o $(TEMPORAL_FOLDER)/headers.o $(CFLAGS) $(DEBUG)
-	gcc -c $(SOURCE_FOLDER)/oper.c -o $(TEMPORAL_FOLDER)/oper.o $(CFLAGS) $(DEBUG)
-	gcc -c $(SOURCE_FOLDER)/args.c -o $(TEMPORAL_FOLDER)/args.o $(CFLAGS) $(DEBUG)
-	gcc -c $(SOURCE_FOLDER)/error.c -o $(TEMPORAL_FOLDER)/error.o $(CFLAGS) $(DEBUG)
+	gcc -c $(SOURCE_FOLDER)/main.c -o $(TEMPORAL_FOLDER)/main.o $(CFLAGS) $(DEBUG) $(LINK)
+	gcc -c $(SOURCE_FOLDER)/headers.c -o $(TEMPORAL_FOLDER)/headers.o $(CFLAGS) $(DEBUG) $(LINK)
+	gcc -c $(SOURCE_FOLDER)/oper.c -o $(TEMPORAL_FOLDER)/oper.o $(CFLAGS) $(DEBUG) $(LINK)
+	gcc -c $(SOURCE_FOLDER)/args.c -o $(TEMPORAL_FOLDER)/args.o $(CFLAGS) $(DEBUG) $(LINK)
+	gcc -c $(SOURCE_FOLDER)/error.c -o $(TEMPORAL_FOLDER)/error.o $(CFLAGS) $(DEBUG) $(LINK)
 
 clean:
 	rm -r $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
