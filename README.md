@@ -10,6 +10,7 @@ I look in the future to add functionality to compress (in .gz format).
 - [Git](https://git-scm.com/)
 - [Make](https://www.gnu.org/software/make/)
 - [GCC](https://www.gnu.org/software/gcc/)
+- [Zlib.h](http://www.zlib.net/)
 
 ### Steaps:
 ```
