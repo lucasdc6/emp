@@ -2,22 +2,51 @@
 #define ERROR_H
 
 #define OPEN 1 //Retorna 1 si hubo un error con la apertura de un archivo
-#define READ 2 //Retorna 2 si hubo un error con la Lectura de archivos
-#define WRITE 3 //Retorna 3 si hubo un error con la Escritura de archivos
+//Return 1 if there was an error opening a file
+#define READ 2 //Retorna 2 si hubo un error con la lectura de archivos
+//Return 2 if there was an error reading a file
+#define WRITE 3 //Retorna 3 si hubo un error con la escritura de archivos
+//Return 3 if there was an error writing a file
 #define CREATE 4 //Retorna 4 si hubo un error con la creacion de archivos
+//Return 4 if there was an error creating a file
 #define CUR 5 //Retorna 5 si hubo un error con el posicionamiento del cursor en el archivo
+//Return 5 if there was an error setting the cursor in the file
 #define NUM_FILES 6 //Retorna 6 si hubo un error con el numero de archivos ingresado
+//Return 6 if there was an error with the number of files
 #define NO_FILES 7 //Retorna 7 si no se pudo encontrar los archivos buscados
+//Return 7 if there was an error searching the files
 #define OP_IN 8 //Retorna 8 si hubo un error con los archivos de entrada
+//Return 8 if there was an error with the input files
 #define OP_OUT 9 //Retorna 9 si hubo un error con los archivos de salida
+//Return 9 if there was an error with the output files
 #define NO_OPERATIONS 10 //Retorna 10 si hubo un error con la cantidad de opciones ingresadas
+//Return 10 if there was an error with the number of options entered
 #define FILE_UNPACK 11 //Retorna 11 si hubo un error con el nombre ingresado del archivo a desempaquetar
+//Return 11 if there was an error with the name of the file to unpack
 #define OP_LIS_INC 12 //Retorna 12 si es una opcion incorrecta
+//Return 12 if there was an incorrect option
 #define OPEN_DIR 13 //Retorna 13 si hubo un error al abrir un directorio
+//Return 13 if there was an error opening a directory
 #define FORMAT 14 //Retorna 14 si el formato del archivo de entrada es incorrecto
+//Return 14 if there was an error with the format of the file of input
 #define W_NAME 15 //Retorna 15 si hubo problemas con el nombre del archivo de salida
+//Return 15 if there was an error with the name of the file of output
 
-/*
+/*"errors_2p" - Function of handling of errors with 2 parameters of output in the
+message (the first parameter is the path define, the second is a string from strerror
+using the errno)
+Receives:
+  -A file to close(is specified with 0 or 1 in the penultimate parameter), if the number
+  is 0 receives NULL.
+  -An structure of arguments to free (is specified with 0 or 1 at the last parameter)
+  if the number is 0 receives NULL.
+  -A message to print in the output standard error
+  -A path of a file involucrated in the error.
+  -A constant with the numbrer of exit
+  -A numeric value used like boolean to specify what to do with the file.
+  -A numeric value used like boolean to specify what to do with the structure.
+
+
 "errors_2p" - Funcion de manejo de errores con 2 parametros de salida en el mensaje
 (el primer paramero es el path definido más adelante, el segundo es un string
 proveniente del strerror utilizando el errno)
@@ -38,8 +67,20 @@ Recibe:
   (no hay estructura)*/
 void errors_2p(FILE*, option_args*, const char*, const char*, const int, size_t, size_t);
 
-/*
-"errors_2p" - Funcion de manejo de errores con 1 parametro de salida(impreso con el strerror
+/*"errors_1p" - Function of handling of errors with 1 parameters of output in the
+message (a string from strerror using the errno)
+Receives:
+  -A file to close(is specified with 0 or 1 in the penultimate parameter), if the number
+  is 0 receives NULL.
+  -An structure of arguments to free (is specified with 0 or 1 at the last parameter)
+  if the number is 0 receives NULL.
+  -A message to print in the output standard error
+  -A constant with the numbrer of exit
+  -A numeric value used like boolean to specify what to do with the file.
+  -A numeric value used like boolean to specify what to do with the structure.
+
+
+"errors_1p" - Funcion de manejo de errores con 1 parametro de salida(impreso con el strerror
  utilizando el errno) en el mensaje.
 
 Recibe:
@@ -57,7 +98,18 @@ Recibe:
   (no hay estructura)*/
 void errors_1p(FILE*, option_args*, const char*, const int, size_t, size_t);
 
-/*
+/*"errors_msg" - Function of handling of errors what just printf a message of error
+Receives:
+  -A file to close(is specified with 0 or 1 in the penultimate parameter), if the number
+  is 0 receives NULL.
+  -An structure of arguments to free (is specified with 0 or 1 at the last parameter)
+  if the number is 0 receives NULL.
+  -A message to print in the output standard error
+  -A constant with the numbrer of exit
+  -A numeric value used like boolean to specify what to do with the file.
+  -A numeric value used like boolean to specify what to do with the structure.
+
+
 "errors_msg" - Funcion de manejo de errores que solo imprime un mensaje de error.
 
 Recibe:
@@ -75,4 +127,9 @@ Recibe:
   (no hay estructura)*/
 void errors_msg(FILE*, option_args*, const char*, const int, size_t, size_t);
 
+/*Receives an int equivalent to the error codes supported by the lib zlib.h
+
+Recibe un int que equivale a los diferentes codigos de error admitidos por la
+libreria zlib.h */
+void zerr(int);
 #endif
