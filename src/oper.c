@@ -15,28 +15,40 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with EMP. If not, see <http://www.gnu.org/licenses/>.     */
 
-#include "headers.h" /*Funciones que trabajan con los headers*/
-#include "empTypes.h" /*Tipos usados en el paquete*/
-#include <stdio.h> /*Entrada/Salida*/
+#include "headers.h" /*Funtions for the headers*/
+#include "empTypes.h" /*Types used in the EMP*/
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <errno.h>
 #include <string.h>
 #include <time.h>
 #include <dirent.h>
-#include "error.h"
+#include <assert.h>
+#include <zlib.h>
+#include "error.h" /*All the referred to errors(macros and functions)*/
 #include "oper.h"
-#include "args.h"
+#include "args.h"  /*Functions used to parsing arguments*/
+
+#define CHUNK 16384
+
+#if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
+#  include <fcntl.h>
+#  include <io.h>
+#  define SET_BINARY_MODE(file) setmode(fileno(file), O_BINARY)
+#else
+#  define SET_BINARY_MODE(file)
+#endif
 
 int small_pack(FILE* output, char *arg_pack){
 	printf("Packing \"%s\"...\n", arg_pack);
-	FILE* pack; //Archivo a empaquetar
+	FILE* pack; //File to packed
 	int c;
 	t_head_file regf;
 	create_head_file(&regf, arg_pack);
 	write_head_file(output, &regf);
 	if ((pack = fopen(arg_pack, "r+")) == NULL){
-		errors_2p(output, NULL, "ERROR opnening", arg_pack, OPEN, 1, 0);
+		errors_2p(output, NULL, "ERROR opnening", arg_pack, OPEN, 0, 1);
 	}
 	else{
 		while((c = fgetc(pack)) != EOF){
@@ -88,14 +100,66 @@ int pack_dir(FILE* output, const char* dir){
 		}
 	}
 	closedir(directory);
-	return ret; //Cantidad de archivos empaquetados
+	return ret; //Quantity of packed files
+}
+
+int compress_files(FILE *source, FILE *dest, int level){
+	int ret, flush;
+	unsigned have;
+	z_stream strm;
+	unsigned char in[CHUNK];
+	unsigned char out[CHUNK];
+
+	/* allocate deflate state */
+	strm.zalloc = Z_NULL;
+	strm.zfree = Z_NULL;
+	strm.opaque = Z_NULL;
+
+	ret = deflateInit(&strm, Z_DEFAULT_COMPRESSION);
+	//ret = deflateInit2(&strm, Z_DEFAULT_COMPRESSION, Z_DEFLATED, (15+16), 8,       Z_DEFAULT_STRATEGY);
+	if (ret != Z_OK)
+			return ret;
+
+	/* compress until end of file */
+	do {
+			strm.avail_in = fread(in, 1, CHUNK, source);
+			printf("available in: %u \n", strm.avail_in);
+			if (ferror(source)) {
+					(void)deflateEnd(&strm);
+					return Z_ERRNO;
+			}
+			flush = feof(source) ? Z_FINISH : Z_NO_FLUSH;
+			strm.next_in = in;
+
+			/* run deflate() on input until output buffer not full, finish
+				 compression if all of source has been read in */
+			do {
+					strm.avail_out = CHUNK;
+					strm.next_out = out;
+					ret = deflate(&strm, flush);    /* no bad return value */
+					assert(ret != Z_STREAM_ERROR);  /* state not clobbered */
+					have = CHUNK - strm.avail_out;
+					if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
+							(void)deflateEnd(&strm);
+							return Z_ERRNO;
+					}
+			} while (strm.avail_out == 0);
+			assert(strm.avail_in == 0);     /* all input will be used */
+
+			/* done when last data in file processed */
+	} while (flush != Z_FINISH);
+	assert(ret == Z_STREAM_END);        /* stream will be complete */
+
+	/* clean up and return */
+	(void)deflateEnd(&strm);
+	return Z_OK;
 }
 
 int big_pack(FILE* output, option_args *args){
 	t_head reg;
 	create_head(&reg);
 	write_head(output, &reg);
-	int i, c, f_dir = 0; //Cantidad de archivos en directorios
+	int i, c, f_dir = 0; //Quantity of files in the directory
 	struct stat buf;
 	for(i = 0; i < args->operands.cant; i++){
 		if(stat(args->operands.list[i], &buf) != 0){
@@ -130,12 +194,33 @@ int big_pack(FILE* output, option_args *args){
 			write_item(output, &head_entries, sizeof(uint32_t), 1);
 		}
 	}
+	if(args->operands.compress){
+		char compr_path[MAX_PATH];
+		strcpy(compr_path, args->operands.out);
+		strcat(compr_path, ".gz");
+		FILE* compr;
+		SET_BINARY_MODE(output);
+		SET_BINARY_MODE(compr);
+		if ((compr = fopen(compr_path, "w")) == NULL){
+			errors_2p(output, NULL, "ERROR opnening", compr_path, OPEN, 0, 1);
+		}
+		int ret = compress_files(output, compr, Z_DEFAULT_COMPRESSION);
+		printf("Compress return %d\n", ret);
+		if (ret != Z_OK)
+			zerr(ret);
+		if(args->operands.silent)
+			printf("Remove: %s\n", args->operands.out);
+		remove(args->operands.out);
+		if(strlen(compr_path) > 32)
+			args->operands.out = (char*)realloc(args->operands.out, strlen(args->operands.out)+1);
+		strcpy(args->operands.out, compr_path);
+	}
 	fclose(output);
 	return printf("Packed files into %s\n", args->operands.out);
 }
 
 int repack(FILE* output, option_args *args){
-	int i, c, f_dir = 0; //Cantidad de archivos en directorios
+	int i, c, f_dir = 0; //Quantity of files in the directory
 	struct stat buf;
 	for(i = 0; i < args->operands.cant; i++){
 		if(stat(args->operands.list[i], &buf) != 0){
@@ -184,7 +269,7 @@ static int mk_dir(const char *dir, int mode){
 	}
 	else{
 		printf("Creating directory \"%s\"...\n", dir);
-		errno = 0; //Reseteo errno seteado por opendir, error ya resuelto
+		errno = 0; //Reset errno setted for opendir, error resolved
 		return 0;
 	}
 }
@@ -213,6 +298,63 @@ static void make_directories(const char* dir){
 	}
 	else
 		closedir(directory);
+}
+
+int descompress_files(FILE *source, FILE *dest){
+	int ret;
+	unsigned have;
+	z_stream strm;
+	unsigned char in[CHUNK];
+	unsigned char out[CHUNK];
+
+	/* allocate inflate state */
+	strm.zalloc = Z_NULL;
+	strm.zfree = Z_NULL;
+	strm.opaque = Z_NULL;
+	strm.avail_in = 0;
+	strm.next_in = Z_NULL;
+	ret = inflateInit(&strm);
+	if (ret != Z_OK)
+			return ret;
+
+	/* decompress until deflate stream ends or end of file */
+	do {
+			strm.avail_in = fread(in, 1, CHUNK, source);
+			if (ferror(source)) {
+					(void)inflateEnd(&strm);
+					return Z_ERRNO;
+			}
+			if (strm.avail_in == 0)
+					break;
+			strm.next_in = in;
+
+			/* run inflate() on input until output buffer not full */
+			do {
+					strm.avail_out = CHUNK;
+					strm.next_out = out;
+					ret = inflate(&strm, Z_NO_FLUSH);
+					assert(ret != Z_STREAM_ERROR);  /* state not clobbered */
+					switch (ret) {
+					case Z_NEED_DICT:
+							ret = Z_DATA_ERROR;     /* and fall through */
+					case Z_DATA_ERROR:
+					case Z_MEM_ERROR:
+							(void)inflateEnd(&strm);
+							return ret;
+					}
+					have = CHUNK - strm.avail_out;
+					if (fwrite(out, 1, have, dest) != have || ferror(dest)) {
+							(void)inflateEnd(&strm);
+							return Z_ERRNO;
+					}
+			} while (strm.avail_out == 0);
+
+			/* done when inflate() says it's done */
+	} while (ret != Z_STREAM_END);
+
+	/* clean up and return */
+	(void)inflateEnd(&strm);
+	return ret == Z_STREAM_END ? Z_OK : Z_DATA_ERROR;
 }
 
 static int small_unpack(FILE* input, const char* arg_unpack, const char* d_input, const int tam, const char* path){
@@ -262,6 +404,7 @@ static int small_unpack(FILE* input, const char* arg_unpack, const char* d_input
 }
 
 int unpack(FILE* input, option_args *args){
+	char dir_in[MAX_PATH];
 	char dir[strlen(args->operands.out)+1];
 	strcpy(dir, args->operands.out);
 	DIR* directory;
@@ -273,6 +416,25 @@ int unpack(FILE* input, option_args *args){
 		if(mk_dir(dir, 0777) == 1){
 			errors_2p(input, args, "ERROR creating the directory", dir, CREATE, 0, 0);
 		}
+	}
+	if(args->operands.compress){
+		FILE* in_emp;
+		strcpy(dir_in, args->operands.in);
+		dir_in[strlen(dir_in)-3] = '\0';
+		if((in_emp = fopen(dir_in, "w")) == NULL){
+			fclose(input);
+			closedir(directory);
+			errors_2p(in_emp, args, "ERROR opening the compressed file", args->operands.in, OPEN, 0, 0);
+		}
+		int ret = descompress_files(input, in_emp);
+		if (ret != Z_OK)
+			zerr(ret);
+		fclose(input);
+		fclose(in_emp);
+	}
+	if((input = fopen(dir_in, "r+")) == NULL){
+			closedir(directory);
+			errors_2p(input, args, "ERROR opening the compressed file", dir_in, OPEN, 0, 0);
 	}
 	read_head(input, &head_p);
 	for(i = 1; i <= head_p.entries; i++){
@@ -335,7 +497,7 @@ int detail(FILE* input, option_args *args){
 			ok = 1;
 			tm = localtime(&reg.date);
 			strftime(buf, sizeof(buf), "%Y.%m.%d %H:%M:%S", tm);
-			printf("Path: %s\nDate of last modification: %s\nSize: %llu bytes\n\n", reg.path, buf, reg.tam);
+			printf("Path: %s\nDate of last modification: %s\nSize: %llu bytes\n\n", reg.path, buf, (long long unsigned)reg.tam); //otra forma??
 			break;
 		}
 		else{
@@ -346,11 +508,7 @@ int detail(FILE* input, option_args *args){
 		free(reg.path);
 	}
 	if (!ok){
-		fprintf(stderr, "Could not find file \"%s\" in \"%s\"\n", args->operands.list[0], args->operands.in);
-		fclose(input);
-		free_files_array(&args->operands);
-		free(args);
-		exit(NO_FILES);
+		errors_2p(input, args, "Could not find file", args->operands.list[0], NO_FILES, 0, 0);
 	}
 	else{
 		free(reg.path);
@@ -412,7 +570,7 @@ int list(FILE* input, option_args *args, const size_t type){
 		case SIZE:
 			qsort((void*)files, head_p.entries, sizeof(t_head_file), &compare_size);
 			for(i = 0; i < head_p.entries; i++){
-				printf("%s %llu\n", files[i].path, files[i].tam);
+				printf("%s %llu\n", files[i].path, (long long unsigned)files[i].tam);
 				free(files[i].path);
 			}
 			break;
@@ -421,22 +579,25 @@ int list(FILE* input, option_args *args, const size_t type){
 	return printf("Listing files by %s to %s\n", args->operands.list[0], args->operands.in);
 }
 
-void ok_input(FILE* input, const char* in){
+void ok_input(FILE* input, const char* in, int compress_flag){
+	if(compress_flag){
+		if(IS_GZ(in)){
+			errno = ECANCELED; //errno = Operación cancelada / Operation canceled
+			errors_2p(input, NULL, "ERROR Incorrect format of the file of input", in, FORMAT, 0, 1);
+		}
+	}
 	struct stat buf;
 	if(stat(in, &buf) != 0){
-		remove(in);
 		errors_2p(input, NULL, "ERROR opnening", in, OPEN, 0, 1);
 	}
 	if(buf.st_size < 24){
-		remove(in);
-		errno = ECANCELED; //errno = Operación cancelada
+		errno = ECANCELED; //errno = Operación cancelada / Operation canceled
 		errors_2p(input, NULL, "ERROR Incorrect format of the file of input", in, FORMAT, 0, 1);
 	}
 	t_head head;
 	read_head(input, &head);
 	if(strncmp(head.magic, "EMP", 3) != 0){
-		remove(in);
-		errno = ECANCELED; //errno = Operación cancelada
+		errno = ECANCELED; //errno = Operación cancelada / Operation canceled
 		errors_2p(input, NULL, "ERROR Incorrect format of the file of input", in, FORMAT, 0, 1);
 	}
 }
@@ -465,7 +626,6 @@ void ok_output(char* out){
 				fprintf(stderr, "Wrong option.\n");
 			}
 			while(ok_op);
-			//ok_output(out);
 		}
 	}
 }
@@ -525,7 +685,7 @@ void file_exist(const char* dir, char* path, size_t io){
 								}
 							}
 							else{
-								printf("\nThat was a lot of enters!\nSpecifically 9\nThe number don't pass the 9\n");
+								printf("\nThe number don't pass the 9\nThe program ends\n");
 								closedir(directory);
 								exit(99);
 							}
@@ -545,6 +705,6 @@ void file_exist(const char* dir, char* path, size_t io){
 }
 
 void print_time(clock_t start, size_t flag){
-	if(flag)
+	if(!flag)
 		printf("Took: %f sec\n", ((double)clock() - start) / CLOCKS_PER_SEC);
 }
