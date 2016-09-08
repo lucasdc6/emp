@@ -23,6 +23,8 @@ along with EMP. If not, see <http://www.gnu.org/licenses/>.	*/
 #include "args.h"
 #include "error.h"
 
+#define V "0.2"
+
 char *longopts[] = {
 	"--pack",
 	"--unpack",
@@ -53,15 +55,22 @@ char *shortio[] = {
 	"-t"
 };
 
+static void version(){
+	printf("EMP %s\nCopyright (C) 2016 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by Lucas Di Cunzolo\n", V);
+	exit(0);
+}
 
 static void help(const char *progname){
 	printf("Use:\n");
-	printf("\t%s --pack file1.txt file2.bin --output file.emp\n", progname);
-	printf("\t%s --unpack file1.txt file2.bin --input file.emp[--outputdir /tmp]\n", progname);
-	printf("\t%s --repack file3.bin --output file.emp\n", progname);
-	printf("\t%s --unpack-all --input file.emp [--outputdir /tmp]\n", progname);
-	printf("\t%s --detail file1.txt --input file.emp\n", progname);
-	printf("\t%s --list [name|date|size] --input file.emp\n", progname);
+	printf("\t%s --pack file1.txt --output file.emp [--compress][--silent]\n", progname);
+	printf("\t%s --unpack file1.txt --input file.emp[--outputdir /tmp][--compress][--silent]\n", progname);
+	printf("\t%s --repack file2.bin --output file.emp [--compress][--silent]\n", progname);
+	printf("\t%s --unpack-all --input file.emp [--outputdir /tmp][--compress][--silent]\n", progname);
+	printf("\t%s --detail file1.txt --input file.emp [--silent]\n", progname);
+	printf("\t%s --list [name|date|size] --input file.emp [--silent]\n", progname);
+	printf("\nOther options:\n");
+	printf("\t%s --version \t- print the program version\n", progname);
+	printf("\t%s --help \t- print this help\n", progname);
 }
 
 static void error(const char *msg, const int err){
@@ -71,9 +80,11 @@ static void error(const char *msg, const int err){
 
 static void init_files_array(files_array *a, int initial_size, int initial_tam){
 	a->list = (char**)malloc((initial_tam+1) * sizeof(a->list));
-	a->in = (char*)malloc((initial_size+1) * sizeof(char));
-	a->out = (char*)malloc((initial_size+1) * sizeof(char));
+	a->in = (char*)malloc((initial_size) * sizeof(char));
+	a->out = (char*)malloc((initial_size) * sizeof(char));
 	a->cant = 0;
+	a->compress = 0;
+	a->silent = 0;
 	a->size = initial_size;
 	a->list_size = initial_tam;
 	a->num_in = 0;
@@ -98,6 +109,8 @@ void free_files_array(files_array *a){
 	free(a->in);
 	free(a->out);
 	a->cant = 0;
+	a->compress = 0;
+	a->silent = 0;
 	a->size = 0;
 	a->list_size = 0;
 	a->num_in = 0;
@@ -105,6 +118,15 @@ void free_files_array(files_array *a){
 }
 
 option_args *parse(int argc, char** argv){
+	if(argc == 2){
+		if(!strcmp(argv[1], "--version")){
+			version();
+		}
+		if(!strcmp(argv[1], "--help")){
+			help(argv[0]);
+			exit(0);
+		}
+	}
 	if (argc < 4){
 		if(argc > 1) fprintf(stderr, "The minimum of arguments is 4\n\n");
 		help(argv[0]);
@@ -170,6 +192,14 @@ option_args *parse(int argc, char** argv){
 				}
 				continue;
 			}
+		}
+		if(strcmp(argv[i], "--compress") == 0 || strcmp(argv[i], "-c") == 0){
+				optargs->operands.compress = 1;
+				continue;
+		}
+		if(strcmp(argv[i], "--silent") == 0 || strcmp(argv[i], "-s") == 0){
+			optargs->operands.silent = 1;
+			continue;
 		}
 		if (optindex == OPTLEN && !is_operation){
 			if(optargs->num_op != 0){
