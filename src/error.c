@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+#include <zlib.h>
 #include "args.h"
 #include "empTypes.h"
 #include "oper.h"
@@ -38,4 +39,27 @@ void errors_msg(FILE* file, option_args *args, const char* msg, const int num_er
 	if(!ok_file) fclose(file);
 	print_time(start, 1);
 	exit(num_err);
+}
+
+void zerr(int ret){
+    fputs("zpipe: ", stderr);
+    switch (ret) {
+    case Z_ERRNO:
+        if (ferror(stdin))
+            fputs("ERROR reading stdin\n", stderr);
+        if (ferror(stdout))
+            fputs("ERROR writing stdout\n", stderr);
+        break;
+    case Z_STREAM_ERROR:
+        fputs("ERROR invalid compression level\n", stderr);
+        break;
+    case Z_DATA_ERROR:
+        fputs("ERROR invalid or incomplete deflate data\n", stderr);
+        break;
+    case Z_MEM_ERROR:
+        fputs("ERROR out of memory\n", stderr);
+        break;
+    case Z_VERSION_ERROR:
+        fputs("ERROR zlib version mismatch!\n", stderr);
+    }
 }
