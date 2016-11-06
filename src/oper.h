@@ -79,17 +79,17 @@ int repack(FILE*, option_args*);
 Descomprime el archivo fuente en el archivo destino(primer y segundo parametro respectivamente)*/
 int descompress_files(FILE*, FILE*);
 
-/*Unpacks the files from the input(first parameter) specified in the structure(second 
+/*Unpacks the files from the input(first parameter) specified in the structure(second
 parameter)
 
-Desempaqueta los archivos del archivo de entrada(primer parametro) especificados en la 
+Desempaqueta los archivos del archivo de entrada(primer parametro) especificados en la
 estructura(segundo parametro)*/
 int unpack(FILE*, option_args*);
 
-/*Unpacks all the files from the input(first parameter) specified in the structure(second 
+/*Unpacks all the files from the input(first parameter) specified in the structure(second
 parameter)
 
-Desempaqueta todos los archivos del archivo de entrada(primer parametro) especificados en la 
+Desempaqueta todos los archivos del archivo de entrada(primer parametro) especificados en la
 estructura(segundo parametro)*/
 int unpack_all(FILE*, option_args *args);
 
@@ -120,7 +120,7 @@ Determina si el nombre del archivo de salida es correcto*/
 void ok_output(char*);
 
 /*Determines if exist the file (second parameter) in the directory(first parameter) beafore
-writing. If exist, asks if you want to change the name, if you want to rewrite or omit the 
+writing. If exist, asks if you want to change the name, if you want to rewrite or omit the
 option (the program close).
 The third parameter indicate if is a file or a packege. If is a packege, check if exist and
 then check the name with the function ok_output. If is a file, only check if exist.
@@ -132,6 +132,8 @@ El tercer parametro indica si es un paquete o un archivo, de ser un paquete
 comprueba si existe y luego comprueba el nombre con la funcion ok_output, de ser de archivos
 desempaquetados solo comprueba si existe*/
 void file_exist(const char*, char*, size_t);
+
+void new_path(char*);
 
 /*Show the runtime.
 The second parameter is used to not show the output if the program is executed in silent mode
