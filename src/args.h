@@ -25,13 +25,13 @@ Utilizado en el parseo de argumentos y en el main del programa, enlazado
 directamente con las operaciones basicas del empaquetador*/
 
 enum {
-	PACK,
-	UNPACK,
-	REPACK,
-	UNPACKALL,
-	DETAIL,
-	LIST,
-	OPTLEN
+  PACK,
+  UNPACK,
+  REPACK,
+  UNPACKALL,
+  DETAIL,
+  LIST,
+  OPTLEN
 };
 
 /*Function that releases the space allocated by the structure files_array
