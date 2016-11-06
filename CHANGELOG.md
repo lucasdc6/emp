@@ -5,10 +5,16 @@ All notable changes to this project will be documented in this file.
 ### Added
 - compress function
 - silent mode
+- magic is recognized by file
+###Changed
+- makefile now add the magic configuration in /etc/magic
+- changed the file associated by the stderr in silent mode
+### Fixed
+- The file_exist function now admit more than 10 repetitions
 
 ## 0.2 - 2016-08-29
 ### Added
-- The program create the file "ERRORS[yyyy-mm-dd-H:M:S]" with the last error
+- The program create the file "ERRORS[yyyy-mm-dd-H:M:S]" with the last error (in silent mode)
 ### Changed
 - The error messages printed in the stderr
 ### Fixed

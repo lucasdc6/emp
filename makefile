@@ -28,7 +28,7 @@ LINK= -lz
 
 .PHONY:	all c.o clean folders install uninstall reinstall
 all: folders c.o $(TEMPORAL_FOLDER) $(BUILD_FOLDER)
-	gcc $(TEMPORAL_FOLDER)/** -o $(BUILD_FOLDER)/emp $(CFLAGS) $(DEBUG) $(LINK)
+	mgcc $(TEMPORAL_FOLDER)/** -o $(BUILD_FOLDER)/emp $(CFLAGS) $(DEBUG) $(LINK)
 
 c.o:
 	gcc -c $(SOURCE_FOLDER)/main.c -o $(TEMPORAL_FOLDER)/main.o $(CFLAGS) $(DEBUG) $(LINK)
@@ -59,10 +59,12 @@ install: $(BUILD_FOLDER)/emp
 	cp -p $(BUILD_FOLDER)/emp $(INSTALL_FOLDER)
 	cp -p $(MAN)/emp.1.gz $(MAN_PAGES)
 	cp -p $(MAN_ES)/emp.1.gz $(MAN_PAGES_ES)
+	@./magic ins
 
 uninstall: $(INSTALL_FOLDER)/emp
 	rm $(INSTALL_FOLDER)/emp
 	rm $(MAN_PAGES)/emp.1.gz
 	rm $(MAN_PAGES_ES)/emp.1.gz
+	@./magic uins
 
 reinstall: uninstall install
