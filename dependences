@@ -1,0 +1,61 @@
+#!/bin/bash
+#Check if the system has the required packages, any new dependence it will added at the array "DEP"
+
+if [ ! $(whoami) = root ] #Check if the script has sudo permissions
+then
+  echo "Execute the file $0 with sudo permissions"
+  exit 1
+fi
+
+DEP=(gcc make zlib1g) #Dependences array
+
+select ANS in Show\ dependences Autoinstall Manual\ installation Do\ nothing
+do
+  case $ANS in
+    "Show dependences")
+      printf "Dependeces list: ${DEP[*]}\n\n"
+      ;;
+    "Autoinstall")
+      for OP in ${DEP[*]}
+      do
+        apt-get install $OP -y
+        printf "\n"
+      done
+      exit 0
+      ;;
+    "Manual installation")
+      for OP in ${DEP[*]}
+      do
+        CANT=$(dpkg -l | grep -w $OP | wc -l)
+        if [ $CANT -gt 0 ]
+        then
+          echo "Do you want to update $OP packege?"
+          select ANS in yes no
+          do
+            case $ANS in
+              "yes")
+                printf "Updating...\n\n"
+                apt-get upgrade $OP
+                break
+                ;;
+              "no")
+                break
+                ;;
+              *)
+                echo "Invalid option"
+                ;;
+              esac
+          done
+        else
+          printf "Installing the $OP package...\n\n"
+          apt-get install $OP
+        fi
+        printf "\n"
+      done
+      exit 0
+      ;;
+    "Do nothing")
+        exit 0
+      ;;
+    esac
+done
