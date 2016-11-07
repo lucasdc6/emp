@@ -1,0 +1,13 @@
+#!/bin/bash
+
+CONTROL="deb/DEBIAN/control"
+touch $CONTROL
+echo "Package: emp" >> $CONTROL
+echo "Priority: optional" >> $CONTROL
+echo "Section: misc" >> $CONTROL
+echo "Maintainer: lucasdc" >> $CONTROL
+echo "Architecture: amd64" >> $CONTROL
+echo "Version: 0.2" >> $CONTROL
+echo "Depends: " >> $CONTROL
+echo "Description: emp file packager" >> $CONTROL
+echo >> $CONTROL
