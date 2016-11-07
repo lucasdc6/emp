@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
-- compress function
+- compress function (not functional)
 - silent mode
 - magic is recognized by file command (__only tested in linux__)
  
@@ -17,8 +17,10 @@ All notable changes to this project will be documented in this file.
 ## 0.2 - 2016-08-29
 ### Added
 - The program create the file "ERRORS[yyyy-mm-dd-H:M:S]" with the last error (in silent mode)
+
 ### Changed
 - The error messages printed in the stderr
+
 ### Fixed
 - Errors in the packed and unpacked function
 
