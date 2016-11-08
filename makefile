@@ -8,6 +8,7 @@ MAN=man/en
 MAN_PAGES=/usr/share/man/man1
 MAN_ES=man/es
 MAN_PAGES_ES=/usr/share/man/es/man1
+VERSION=0.2
 
 #################################
 #Opciones de compilacón
@@ -72,13 +73,4 @@ reinstall: uninstall install
 comp_and_make_deb: all make_deb
 
 make_deb:	$(BUILD_FOLDER)/emp $(MAN)/emp.1.gz $(MAN_ES)/emp.1.gz
-	@mkdir -p deb/usr/bin
-	@mkdir -p deb/$(MAN_PAGES_ES)
-	@mkdir -p deb/$(MAN_PAGES)
-	@mkdir -p deb/DEBIAN
-	@./config/make_deb_package
-	@cp $(BUILD_FOLDER)/emp deb/usr/bin
-	@cp $(MAN)/emp.1.gz deb/usr/share/man/man1
-	@cp $(MAN_ES)/emp.1.gz deb/usr/share/man/es/man1
-	@dpkg -b deb emp.deb
-	@rm -r deb
+	@./config/make_deb_package $(BUILD_FOLDER)/emp $(MAN)/emp.1.gz $(MAN_ES)/emp.1.gz $(VERSION)
