@@ -1,13 +1,38 @@
 #!/bin/bash
 
 CONTROL="deb/DEBIAN/control"
-touch $CONTROL
-echo "Package: emp" >> $CONTROL
-echo "Priority: optional" >> $CONTROL
-echo "Section: misc" >> $CONTROL
-echo "Maintainer: lucasdc" >> $CONTROL
-echo "Architecture: amd64" >> $CONTROL
-echo "Version: 0.2" >> $CONTROL
-echo "Depends: " >> $CONTROL
-echo "Description: emp file packager" >> $CONTROL
-echo >> $CONTROL
+MAN_PAGES="/usr/share/man/man1"
+MAN_PAGES_ES="/usr/share/man/es/man1"
+
+create_control(){
+  touch $CONTROL
+  echo "Package: emp" >> $CONTROL
+  echo "Priority: optional" >> $CONTROL
+  echo "Section: misc" >> $CONTROL
+  echo "Maintainer: lucasdc" >> $CONTROL
+  echo "Architecture: amd64" >> $CONTROL
+  echo "Version: $1" >> $CONTROL
+  echo "Depends: " >> $CONTROL
+  echo "Description: emp file packager" >> $CONTROL
+  echo >> $CONTROL
+  return 0
+}
+
+if [ $# -ne 4 ]
+then
+  echo "Usage:"
+  echo "$0 bin man_en man_es version"
+  exit 0
+fi
+
+mkdir -p deb/usr/bin
+mkdir -p deb/$MAN_PAGES
+mkdir -p deb/$MAN_PAGES_ES
+mkdir -p deb/DEBIAN
+create_control $4
+cp $1 deb/usr/bin
+cp $2 deb/$MAN_PAGES
+cp $3 deb/$MAN_PAGES_ES
+dpkg -b deb emp.deb
+rm -r deb
+exit 0
