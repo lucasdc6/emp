@@ -31,12 +31,12 @@ You may need to give sudo permissions.
 
 ####Manually:
 
-1. Download compressed
+  1. Download compressed
 
-[![tar: 26.5kb](https://img.shields.io/badge/tar-26.5%20kb-red.svg)](https://github.com/lucasdc6/emp/archive/v0.2.tar.gz)
-[![zip: 33.4kb](https://img.shields.io/badge/zip-33.4%20kb-red.svg)](https://github.com/lucasdc6/emp/archive/v0.2.zip)
+  [![tar: 26.5kb](https://img.shields.io/badge/tar-26.5%20kb-red.svg)](https://github.com/lucasdc6/emp/archive/v0.2.tar.gz)
+  [![zip: 33.4kb](https://img.shields.io/badge/zip-33.4%20kb-red.svg)](https://github.com/lucasdc6/emp/archive/v0.2.zip)
 
-2. Descompress with you favourite program.
+  2. Descompress with you favourite program.
 
 ```
   $ cd emp-v0.2/
