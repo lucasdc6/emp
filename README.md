@@ -31,20 +31,39 @@ You may need to give sudo permissions.
 
 ####Manually:
 
-1- download compressed in [tar](https://github.com/lucasdc6/emp/archive/v0.2.tar.gz) or [zip](https://github.com/lucasdc6/emp/archive/v0.2.zip)
+1. Download compressed in [tar](https://github.com/lucasdc6/emp/archive/v0.2.tar.gz) or [zip](https://github.com/lucasdc6/emp/archive/v0.2.zip).
 
-2- In the main directory:
+2. Descompress with you favourite program.
 
 ```
+  $ cd emp/
   $ make
   $ make install
 ```
+The name of the directory may can change if you donwload the version in 64 bits or 32 bits
+
 You may need to give sudo permissions.
 
 ## Uninstalling
 
 ### Steaps
+
+####With make:
 ```
   $ make uninstall
 ```
+You may need to give sudo permissions.
+
+####With dpkg (only if you install EMP with dpkg)
+#####64 bits
+```
+  $ dpkg -r emp-amd64
+```
+
+#####32 bits
+```
+  $ dpkg -r emp-i386
+```
+
+
 You may need to give sudo permissions.
