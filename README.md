@@ -10,8 +10,8 @@ I look in the future to add functionality to compress (in .gz format).
 
 ## Installing
 
-[![download 64 bit: 13.4kb](https://img.shields.io/badge/download 64 bit-13.4 kb-red.svg)](https://github.com/lucasdc6/emp/releases/download/v0.2/emp0.2_amd64.deb)
-[![download 32 bit: 13.8kb](https://img.shields.io/badge/download 32 bit-13.8 kb-red.svg)](https://github.com/lucasdc6/emp/releases/download/v0.2/emp0.2_i386.deb)
+[![download 64 bit: 13.4kb](https://img.shields.io/badge/download%2064%20bit-13.4 kb-red.svg)](https://github.com/lucasdc6/emp/releases/download/v0.2/emp0.2_amd64.deb)
+[![download 32 bit: 13.8kb](https://img.shields.io/badge/download%2032%20bit-13.8 kb-red.svg)](https://github.com/lucasdc6/emp/releases/download/v0.2/emp0.2_i386.deb)
 
 ### Prerequisites
 - [Make](https://www.gnu.org/software/make/)
@@ -31,16 +31,18 @@ You may need to give sudo permissions.
 
 ####Manually:
 
-1. Download compressed in [tar](https://github.com/lucasdc6/emp/archive/v0.2.tar.gz) or [zip](https://github.com/lucasdc6/emp/archive/v0.2.zip).
+1. Download compressed
+
+[![tar: 26.5kb](https://img.shields.io/badge/tar-26.5%20kb-red.svg)](https://github.com/lucasdc6/emp/archive/v0.2.tar.gz)
+[![zip: 33.4kb](https://img.shields.io/badge/zip-33.4%20kb-red.svg)](https://github.com/lucasdc6/emp/archive/v0.2.zip)
 
 2. Descompress with you favourite program.
 
 ```
-  $ cd emp/
+  $ cd emp-v0.2/
   $ make
   $ make install
 ```
-The name of the directory may can change if you donwload the version in 64 bits or 32 bits
 
 You may need to give sudo permissions.
 
