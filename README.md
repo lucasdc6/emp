@@ -20,7 +20,7 @@ I look in the future to add functionality to compress (in .gz format).
 
 ### Steaps:
 
-####with Git:
+#### with Git:
 
 ```
   $ git clone https://github.com/lucasdc6/emp.git
@@ -29,7 +29,7 @@ I look in the future to add functionality to compress (in .gz format).
 ```
 You may need to give sudo permissions.
 
-####Manually:
+#### Manually:
 
   1. Download compressed
 
@@ -50,19 +50,19 @@ You may need to give sudo permissions.
 
 ### Steaps
 
-####With make:
+#### With make:
 ```
   $ make uninstall
 ```
 You may need to give sudo permissions.
 
-####With dpkg (only if you install EMP with dpkg)
-#####64 bits
+#### With dpkg (only if you install EMP with dpkg)
+##### 64 bits
 ```
   $ dpkg -r emp-amd64
 ```
 
-#####32 bits
+##### 32 bits
 ```
   $ dpkg -r emp-i386
 ```
