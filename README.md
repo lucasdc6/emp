@@ -10,9 +10,6 @@ I look in the future to add functionality to compress (in .gz format).
 
 ## Installing
 
-[![download 64 bit: 13.4kb](https://img.shields.io/badge/download%2064%20bit-13.4 kb-red.svg)](https://github.com/lucasdc6/emp/releases/download/v0.2/emp0.2_amd64.deb)
-[![download 32 bit: 13.8kb](https://img.shields.io/badge/download%2032%20bit-13.8 kb-red.svg)](https://github.com/lucasdc6/emp/releases/download/v0.2/emp0.2_i386.deb)
-
 ### Prerequisites
 - [Make](https://www.gnu.org/software/make/)
 - [GCC](https://www.gnu.org/software/gcc/)
