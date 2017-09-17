@@ -5,7 +5,7 @@
 #include "empTypes.h"
 
 /*Macros used in the principal program to link the operations index content
-in the structure of the parsing arguments with the operations contents in the 
+in the structure of the parsing arguments with the operations contents in the
 structure enum declared
 
 Macros utilizadas en el programa principal para enlazar los indices de las
@@ -18,7 +18,7 @@ operaciones contenidas en la estructura enum definida debajo de estas macros*/
 #define OP_DETAIL 4
 #define OP_LIST 5
 
-/*Used in the parsing arguments and in the main program, linked directly with the 
+/*Used in the parsing arguments and in the main program, linked directly with the
 basic operations
 
 Utilizado en el parseo de argumentos y en el main del programa, enlazado

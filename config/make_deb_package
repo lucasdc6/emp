@@ -33,6 +33,6 @@ create_control $4
 cp $1 deb/usr/bin
 cp $2 deb/$MAN_PAGES
 cp $3 deb/$MAN_PAGES_ES
-dpkg -b deb emp.deb
+dpkg -b deb emp$4_$(uname -m).deb
 rm -r deb
 exit 0

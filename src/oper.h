@@ -18,6 +18,8 @@ along with EMP. If not, see <http://www.gnu.org/licenses/>.     */
 #ifndef OPER_H
 #define OPER_H
 
+#include <zlib.h>
+
 /*Macros used by the function list
 Macros utilizadas por la función list*/
 #define NAME 0
@@ -53,7 +55,7 @@ in the compress level specified(third parameter)
 
 Comprime el archivo fuente en el destino (primer y segundo parametro respectivamente)
 en el nivel de compresion especificado(tercer parametro)*/
-int compress_files(FILE*, FILE*, int);
+int compress_files(FILE*, gzFile);
 
 /*Package in the file of output(first parameter) the files specified, content in the
 structure(second parameter)
@@ -77,7 +79,7 @@ int repack(FILE*, option_args*);
 /*Descompress the source file in the destination file(first and second parameter respectively)
 
 Descomprime el archivo fuente en el archivo destino(primer y segundo parametro respectivamente)*/
-int descompress_files(FILE*, FILE*);
+int descompress_files(gzFile, FILE*);
 
 /*Unpacks the files from the input(first parameter) specified in the structure(second
 parameter)

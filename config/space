@@ -1,0 +1,22 @@
+#!/bin/bash
+
+EMP_FILE="../build/emp"
+
+emp_file_size(){
+if [ -f $EMP_FILE ]
+then
+  SPC=$(stat $EMP_FILE | grep Tamaño | cut -d" " -f4)
+  echo "$SPC"
+else
+  echo "No emp compiled file in $EMP_FILE"
+fi
+}
+
+INSTALL_FOLDER_SIZE=$(stat $1 | grep Tamaño | cut -d" " -f4)
+
+if [ INSTALL_FOLDER_SIZE -gt SPC ]
+then
+  echo si
+else
+  echo no
+fi 

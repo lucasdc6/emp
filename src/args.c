@@ -25,7 +25,7 @@ along with EMP. If not, see <http://www.gnu.org/licenses/>. */
 
 #define V "0.2"
 
-char *longopts[] = {
+const char *longopts[] = {
   "--pack",
   "--unpack",
   "--repack",
@@ -34,13 +34,13 @@ char *longopts[] = {
   "--list"
 };
 
-char *longio[] = {
+const char *longio[] = {
   "--input",
   "--output",
   "--outputdir"
 };
 
-char *shortopts[] = {
+const char *shortopts[] = {
   "-p",
   "-u",
   "-r",
@@ -49,7 +49,7 @@ char *shortopts[] = {
   "-l"
 };
 
-char *shortio[] = {
+const char *shortio[] = {
   "-i",
   "-o",
   "-t"
@@ -101,7 +101,7 @@ static void insert_name_files(files_array *a, char* file){
 }
 
 void free_files_array(files_array *a){
-  int i;
+  unsigned i;
   for(i = 0; i < a->cant; i++){
     free(a->list[i]);
   }

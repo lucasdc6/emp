@@ -66,7 +66,7 @@ Lee la estructura principal del archivo, ya se debe posicionar el puntero del
 archivo antes de llamar la funcion*/
 int read_head(FILE*, t_head*);
 
-/*Read the principal structure from each file packed. The function needs the cursor 
+/*Read the principal structure from each file packed. The function needs the cursor
 correctly setted
 
 Lee la estructura de cada archivo empaquetado del archivo, ya se debe posicionar

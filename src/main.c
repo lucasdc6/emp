@@ -32,12 +32,14 @@ along with EMP. If not, see <http://www.gnu.org/licenses/>.     */
 
 clock_t start;
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
   start = clock();
   option_args *args;
   args = parse(argc, argv);
   FILE* file_err = NULL;
   char file_err_path[30];
+  FILE* input;
   if(args->operands.silent == 1){
     struct tm* tm_info;
     struct timeval tv;
@@ -64,7 +66,7 @@ int main(int argc, char *argv[]){
     }
     break;
   case OP_UNPACK:;
-    FILE* input;
+    //FILE* input;
     if ((input = fopen(args->operands.in, "r")) == NULL){
       errors_2p(input, args, "ERROR opening", args->operands.in, OPEN, 0, 0);
     }
@@ -96,14 +98,26 @@ int main(int argc, char *argv[]){
     }
     break;
   case OP_UNPACKALL:
+  printf("estoy\n");
+
     if(args->operands.num_in != 1){
       errors_msg(NULL, args, "ERROR: enter an input package", OP_IN, 1, 0);
     }
     else{
-      FILE* input;
+      gzFile compress;
+      if (args->operands.compress){
+        printf("estoy");
+        if ((compress = gzopen(args->operands.in, "rb")) == NULL){
+          printf("es dificil\n");
+          exit(23);
+        }
+        descompress_files(compress, input);
+      }
       if ((input = fopen(args->operands.in, "r")) == NULL){
         errors_2p(input, args, "ERROR opnening", args->operands.in, OPEN, 0, 0);
       }
+      printf("estoy");
+
       ok_input(input, args->operands.in, args->operands.compress);
       rewind(input);
       if(args->operands.num_out == 1){
@@ -117,7 +131,7 @@ int main(int argc, char *argv[]){
     break;
   case OP_DETAIL:
     if(args->operands.num_in == 1 && args->operands.cant == 1){
-      FILE* input;
+      //FILE* input;
       if ((input = fopen(args->operands.in, "r")) == NULL){
         errors_2p(input, args, "ERROR opnening", args->operands.in, OPEN, 0, 0);
       }
